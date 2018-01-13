@@ -1,0 +1,28 @@
+postgres:
+  image: postgres:9.4.5
+  environment:
+    POSTGRES_USER: railsmobydock
+    POSTGRES_PASSWORD: yourpassword
+  ports:
+    - '5432:5432'
+  volumes:
+    - ~/.docker-volumes/railsmobydock/postgresql/data:/var/lib/postgresql/data
+
+redis:
+  image: redis:2.8.22
+  ports:
+    - '6379:6379'
+  volumes:
+    - ~/.docker-volumes/railsmobydock/redis/data:/var/lib/redis/data
+
+railsmobydock:
+  build: .
+  links:
+    - postgres
+    - redis
+  volumes:
+    - .:/railsmobydock
+  ports:
+    - '8000:8000'
+  env_file:
+    - .railsmobydock.env
